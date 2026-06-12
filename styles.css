@@ -208,6 +208,48 @@ main {
   top: 0;
 }
 
+.restaurant-map-marker {
+  background: transparent;
+  border: 0;
+}
+
+.marker-pin {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  color: #fff;
+  background: var(--marker-color);
+  border: 3px solid #fff;
+  border-radius: 50% 50% 50% 4px;
+  box-shadow: 0 5px 16px rgba(24, 28, 25, 0.28);
+  transform: rotate(-45deg);
+  transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+}
+
+.marker-pin span {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 1;
+  transform: rotate(45deg);
+}
+
+.restaurant-map-marker:hover .marker-pin,
+.restaurant-map-marker:focus .marker-pin {
+  box-shadow: 0 8px 22px rgba(24, 28, 25, 0.36);
+  transform: rotate(-45deg) translateY(-3px);
+}
+
+.restaurant-map-marker.is-muted .marker-pin {
+  box-shadow: none;
+}
+
 .world-wrap,
 .world-wrap .map {
   height: 520px;

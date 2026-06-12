@@ -85,6 +85,66 @@ function setupCuisineFilter() {
   )).join(''));
 }
 
+function cuisineSymbol(cuisine) {
+  const symbols = {
+    'Bakery / Cakes': 'CK',
+    'Burgers / Pizza': 'BP',
+    'Café': 'CF',
+    'Café / British Breakfast': 'BR',
+    'Fish & Chips': 'FC',
+    'Fried Chicken': 'CH',
+    'Hot Dogs': 'HD',
+    'Italian Café / Deli': 'IT',
+    'Kebab / Fast Food': 'KB',
+    'Mediterranean': 'ME',
+    'Peri-Peri Chicken': 'PP',
+    'Persian': 'IR',
+    'Sandwiches': 'SW',
+    'South Indian Vegetarian': 'IN',
+    'Tacos': 'MX',
+    'Tamil-Mexican Fusion': 'FU',
+  };
+  return symbols[cuisine] || cuisine.slice(0, 2).toUpperCase();
+}
+
+function cuisineColor(cuisine) {
+  const colors = {
+    'Bakery / Cakes': '#9c4f71',
+    'Burgers / Pizza': '#b75b37',
+    'Café': '#6b5b3f',
+    'Café / British Breakfast': '#476f78',
+    'Fish & Chips': '#2f6384',
+    'Fried Chicken': '#b94e45',
+    'Hot Dogs': '#8d5e00',
+    'Italian Café / Deli': '#4f7f52',
+    'Kebab / Fast Food': '#8a5a2e',
+    'Mediterranean': '#4c6f9b',
+    'Peri-Peri Chicken': '#c04a2b',
+    'Persian': '#6d4f8f',
+    'Sandwiches': '#5d7b45',
+    'South Indian Vegetarian': '#2f746b',
+    'Tacos': '#bd7c24',
+    'Tamil-Mexican Fusion': '#2f746b',
+  };
+  return colors[cuisine] || '#2f746b';
+}
+
+function restaurantIcon(restaurant, visible = true) {
+  const color = visible ? cuisineColor(restaurant.cuisineType) : '#8d908a';
+  const className = visible ? 'restaurant-map-marker' : 'restaurant-map-marker is-muted';
+  return L.divIcon({
+    className,
+    iconSize: [38, 46],
+    iconAnchor: [19, 44],
+    popupAnchor: [0, -42],
+    html: `
+      <span class="marker-pin" style="--marker-color: ${color}">
+        <span>${escapeHtml(cuisineSymbol(restaurant.cuisineType))}</span>
+      </span>
+    `,
+  });
+}
+
 function setupMaps() {
   state.localMap = L.map('localMap', { scrollWheelZoom: false }).setView([51.38095, -0.28285], 17);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -94,14 +154,13 @@ function setupMaps() {
 
   const bounds = [];
   for (const restaurant of state.restaurants) {
-    const marker = L.circleMarker([restaurant.lat, restaurant.lng], {
-      radius: 9,
-      color: '#ffffff',
-      weight: 2,
-      fillColor: '#2f746b',
-      fillOpacity: 0.95,
+    const marker = L.marker([restaurant.lat, restaurant.lng], {
+      icon: restaurantIcon(restaurant),
+      keyboard: true,
+      title: restaurant.name,
     }).addTo(state.localMap);
     marker.bindPopup(popupHtml(restaurant));
+    marker.on('click', () => marker.openPopup());
     marker.on('popupopen', () => {
       const button = document.querySelector(`[data-popup-open="${restaurant.id}"]`);
       if (button) button.addEventListener('click', () => openRestaurant(restaurant.id));
@@ -182,11 +241,9 @@ function updateMarkerStyles() {
     const marker = state.markers.get(restaurant.id);
     if (!marker) continue;
     const visible = active.has(restaurant.id);
-    marker.setStyle({
-      fillColor: visible ? '#2f746b' : '#a9aaa3',
-      fillOpacity: visible ? 0.95 : 0.25,
-      radius: visible ? 9 : 6,
-    });
+    marker.setIcon(restaurantIcon(restaurant, visible));
+    marker.setOpacity(visible ? 1 : 0.32);
+    marker.setZIndexOffset(visible ? 400 : 0);
   }
 }
 
