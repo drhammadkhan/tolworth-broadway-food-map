@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tolworth Broadway Food Map</title>
+    <meta name="description" content="An interactive Tolworth Broadway restaurant map, world cuisine origin map, and local review blog.">
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQfRZ9cc3n7t5h7Yk+D1JxewZgPWe9A=" crossorigin="">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">TB</span>
+        <div>
+          <h1>Tolworth Broadway Food Map</h1>
+          <p>Restaurants, origins, reviews, and photos from one stretch of Tolworth.</p>
+        </div>
+      </div>
+      <nav class="top-nav" aria-label="Main navigation">
+        <a href="#tolworth">Local map</a>
+        <a href="#origins">World map</a>
+        <a href="#reviews">Reviews</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="summary-strip" aria-label="Guide summary">
+        <article>
+          <strong id="restaurantCount">19</strong>
+          <span>food outlets</span>
+        </article>
+        <article>
+          <strong id="originCount">0</strong>
+          <span>origin countries</span>
+        </article>
+        <article>
+          <strong id="reviewCount">0</strong>
+          <span>saved reviews</span>
+        </article>
+        <article>
+          <strong>Tolworth</strong>
+          <span>Broadway, KT6</span>
+        </article>
+      </section>
+
+      <section id="tolworth" class="section-grid map-section">
+        <div class="section-copy">
+          <p class="eyebrow">Local Guide</p>
+          <h2>Explore every restaurant on Tolworth Broadway</h2>
+          <p>Pick a marker, filter the list, add a review, and build a living local food guide from the spreadsheet.</p>
+          <div class="toolbar" role="search">
+            <label class="search-box">
+              <span>Search</span>
+              <input id="searchInput" type="search" placeholder="Restaurant, cuisine, country">
+            </label>
+            <label class="select-box">
+              <span>Cuisine</span>
+              <select id="cuisineFilter">
+                <option value="all">All cuisines</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="map-wrap">
+          <div id="localMap" class="map" aria-label="Map of Tolworth Broadway restaurants"></div>
+        </div>
+      </section>
+
+      <section class="directory-panel" aria-label="Restaurant directory">
+        <div class="directory-heading">
+          <div>
+            <p class="eyebrow">Directory</p>
+            <h2>Restaurants</h2>
+          </div>
+          <button id="resetFilters" class="icon-button" type="button" title="Reset filters" aria-label="Reset filters">↺</button>
+        </div>
+        <div id="restaurantList" class="restaurant-list"></div>
+      </section>
+
+      <section id="origins" class="section-grid origin-section">
+        <div class="map-wrap world-wrap">
+          <div id="worldMap" class="map" aria-label="World map of cuisine origins"></div>
+        </div>
+        <div class="section-copy">
+          <p class="eyebrow">World Map</p>
+          <h2>See where the food comes from</h2>
+          <p>Each origin marker is scaled by how many Tolworth restaurants connect to that country. Fusion restaurants appear in more than one place.</p>
+          <div id="originList" class="origin-list"></div>
+        </div>
+      </section>
+
+      <section id="reviews" class="reviews-section">
+        <div class="section-title-row">
+          <div>
+            <p class="eyebrow">Review Blog</p>
+            <h2>Latest notes and restaurant write-ups</h2>
+          </div>
+          <label class="select-box compact">
+            <span>Sort</span>
+            <select id="reviewSort">
+              <option value="name">Name</option>
+              <option value="rating">Rating</option>
+              <option value="newest">Newest review</option>
+            </select>
+          </label>
+        </div>
+        <div id="blogGrid" class="blog-grid"></div>
+      </section>
+    </main>
+
+    <dialog id="restaurantDialog" class="restaurant-dialog">
+      <button class="dialog-close" id="closeDialog" type="button" aria-label="Close">×</button>
+      <article id="dialogContent"></article>
+    </dialog>
+
+    <template id="reviewFormTemplate">
+      <form class="review-form">
+        <div class="form-row two">
+          <label>
+            <span>Your name</span>
+            <input name="author" type="text" placeholder="Optional">
+          </label>
+          <label>
+            <span>Visit date</span>
+            <input name="date" type="date">
+          </label>
+        </div>
+        <div class="form-row two">
+          <label>
+            <span>Rating</span>
+            <input name="rating" type="range" min="1" max="5" step="0.5" value="4">
+            <output name="ratingOutput">4.0</output>
+          </label>
+          <label>
+            <span>Recommended dish</span>
+            <input name="dish" type="text" placeholder="What should people order?">
+          </label>
+        </div>
+        <label>
+          <span>Review</span>
+          <textarea name="body" rows="5" placeholder="What was good, what would you order again, and who should go?"></textarea>
+        </label>
+        <label>
+          <span>Photo</span>
+          <input name="photo" type="file" accept="image/*">
+        </label>
+        <button class="primary-button" type="submit">Save review</button>
+      </form>
+    </template>
+
+    <footer class="site-footer">
+      <p>Built from <code>Tolworth_Broadway_Food_Outlets.xlsx</code>. Review submissions are saved in this browser.</p>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
