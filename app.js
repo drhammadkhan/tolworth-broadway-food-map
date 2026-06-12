@@ -159,12 +159,8 @@ function setupMaps() {
       keyboard: true,
       title: restaurant.name,
     }).addTo(state.localMap);
-    marker.bindPopup(popupHtml(restaurant));
-    marker.on('click', () => marker.openPopup());
-    marker.on('popupopen', () => {
-      const button = document.querySelector(`[data-popup-open="${restaurant.id}"]`);
-      if (button) button.addEventListener('click', () => openRestaurant(restaurant.id));
-    });
+    marker.bindTooltip(restaurant.name, { direction: 'top', offset: [0, -40] });
+    marker.on('click', () => openRestaurant(restaurant.id));
     state.markers.set(restaurant.id, marker);
     bounds.push([restaurant.lat, restaurant.lng]);
   }
@@ -276,7 +272,7 @@ function renderDirectory() {
     button.addEventListener('click', () => {
       const restaurant = byId(button.dataset.map);
       state.localMap.setView([restaurant.lat, restaurant.lng], 19);
-      state.markers.get(restaurant.id).openPopup();
+      state.markers.get(restaurant.id).openTooltip();
       document.querySelector('#tolworth').scrollIntoView({ behavior: 'smooth' });
     });
   });
